@@ -187,7 +187,7 @@ if __name__ == "__main__":
 
 	if not os.path.isfile(myfile):
 		print("Can't find configuration file, exiting!")
-		exit(1)
+		exit()
 
 	file1 = open(myfile, 'r')     
 

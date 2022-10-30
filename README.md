@@ -7,12 +7,17 @@
 
 ## About 
 
-There are many great books available on https://openlibrary.org/ and https://archive.org/, however, many of them need to be borrowed and you can only borrow them for 1 hour to 14 days and you don't have the option to download it as a PDF to read it offline or share it with your friends. I created this program to solve this problem and retrieve the original book in pdf format for FREE !
+Allows you to download locally books from https://archive.org!
 
-Of course, the download takes a few minutes depending on the number of pages and the quality of the images you have selected. You must also create an account on https://archive.org/ for the tool to work.
+It can download original JPG files to work on them further, join them into single PDF without quality loss, or made special PDF with cover and matadata.
 
+You must remember to create an account on https://archive.org/ for the tool to work.
 
 ## Getting Started
+
+You can either install python, use "pip install requirements.txt" and run tool on any platform.
+
+Or if you are on Windows - you can download ready to run exe tool.
 
 Download zip archive with AD.exe and settings file from project Releases, make some folder and unpack ZIP archive you don't need to install anything else.
    
