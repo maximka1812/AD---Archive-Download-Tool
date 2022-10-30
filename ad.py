@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
 		images = download(session, n_threads, directory, links, scale, book_id)
 
-		if outtype in ("pdf","jpgpdf","jpgpdfmeta"): # any modes that require creation of PDF file
+		if outtype in ("pdf","jpgpdf","jpgpdfmeta","jpgepub"): # any modes that require creation of PDF file
 			import img2pdf
 
 			# prepare PDF metadata
@@ -341,7 +341,16 @@ if __name__ == "__main__":
 					pass
 			# keywords
 
-			pdfmeta['keywords'] = metadata['subject']+[f"https://archive.org/details/{book_id}"]+metadata['isbn']+metadata['date']
+			pdfmeta['keywords'] = [f"https://archive.org/details/{book_id}"]
+
+			if 'subject' in metadata:
+				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['subject']
+
+			if 'isbn' in metadata:
+				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['isbn']
+
+			if 'data' in metadata:
+				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['data']
 
 			# print(metadata['subject'])
 
