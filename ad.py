@@ -354,7 +354,7 @@ if __name__ == "__main__":
 
 			# print(metadata['subject'])
 
-			if outtype=="jpgpdfmeta":				
+			if outtype=="jpgpdfmeta":
 				images = images[0]
 
 			pdf = img2pdf.convert(images, **pdfmeta)
