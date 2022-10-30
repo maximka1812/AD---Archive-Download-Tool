@@ -56,13 +56,13 @@ def login(email, password):
 
 	response = session.post("https://archive.org/account/login", data=data, headers=headers)
 	if "bad_login" in response.text:
-		print("[-] Invalid credentials!")
+		print("[-] Wrong email or password, please check!")
 		exit()
 	elif "Successful login" in response.text:
-		print("[+] Successful login")
+		print("[+] Successfully logged in!")
 		return session
 	else:
-		display_error(response, "[-] Error while login:")
+		display_error(response, "[-] Error while logging in:")
 
 def loan(session, book_id, verbose=True):
 	data = {
@@ -86,7 +86,7 @@ def loan(session, book_id, verbose=True):
 
 	if "token" in response.text:
 		if verbose:
-			print("[+] Successful loan")
+			print("[+] Successfully loaned this book for one hour")
 		return session
 	else:
 		display_error(response, "Something went wrong when trying to borrow the book, maybe you can't borrow this book.")
@@ -167,7 +167,7 @@ if __name__ == "__main__":
 	print("Archive Downloader 2022.10.1")
 
 	if len(sys.argv) == 1:
-		print("Note that you can specify configuraion file in parameters like AD C:\Path\To\MyConfig.txt")
+		print("Note that you can specify configuration file in parameters like AD C:\Path\To\MyConfig.txt")
 
 	# set default values
 
@@ -354,8 +354,8 @@ if __name__ == "__main__":
 
 			# print(metadata['subject'])
 
-			if outtype=="jpgpdfmeta":
-				images = images[0] 
+			if outtype=="jpgpdfmeta":				
+				images = images[0]
 
 			pdf = img2pdf.convert(images, **pdfmeta)
 
