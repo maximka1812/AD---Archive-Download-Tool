@@ -164,7 +164,7 @@ def make_pdf(pdf, title, directory):
 
 if __name__ == "__main__":
 
-	print("Archive Downloader 2022.10.1")
+	print("Archive Downloader 2022.10.2")
 
 	if len(sys.argv) == 1:
 		print("Note that you can specify configuration file in parameters like AD C:\Path\To\MyConfig.txt")
@@ -347,14 +347,18 @@ if __name__ == "__main__":
 				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['subject']
 
 			if 'isbn' in metadata:
-				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['isbn']
+				if isinstance(metadata['isbn'], list):
+					pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['isbn']
+				else:
+					pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['isbn']]
+				
 
 			if 'data' in metadata:
 				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['data']
 
 			# print(metadata['subject'])
 
-			if outtype=="jpgpdfmeta":
+			if outtype=="jpgpdfmeta":				
 				images = images[0]
 
 			pdf = img2pdf.convert(images, **pdfmeta)
