@@ -8,6 +8,8 @@ import argparse
 import os
 import sys
 import shutil
+from titlecase import titlecase
+
 # import pyperclip   # you can uncomment this if you need MacOS and Linux clipboard support
 import win32clipboard
 
@@ -25,7 +27,7 @@ def get_book_infos(session, url):
 	infos_url = "https:" + r.split('bookManifestUrl="')[1].split('"\n')[0]
 	response = session.get(infos_url)
 	data = response.json()['data']
-	title = string.capwords(data['brOptions']['bookTitle']) # removed spaces replacing .replace(" ", "_")
+	title = titlecase(data['brOptions']['bookTitle']) # titlecase is more advanced compared to capwords method, but only for english!
 	title = ''.join( c for c in title if c not in '<>:"/\\|?*' ) # Filter forbidden chars in directory names (Windows & Linux)
 	title =  title[:150] + " " + url.split('/')[4] # Trim the title to avoid long file names and add book URL as modificator	
 	metadata = data['metadata']
@@ -35,10 +37,10 @@ def get_book_infos(session, url):
 			links.append(page['uri'])
 
 	if len(links) > 1:
-		print(f"[+] Found {len(links)} pages")
+		print(f"[+] This book has {len(links)} pages")
 		return title, links, metadata
 	else:
-		print(f"[-] Error while getting image links")
+		print(f"[-] Error while getting links to images of the pages!")
 		exit()  # must raise exeption, not exit!
 
 def format_data(content_type, fields):
@@ -166,7 +168,7 @@ def make_pdf(pdf, title, directory):
 
 if __name__ == "__main__":
 
-	print("Archive Downloader 2022.10.3")
+	print("Archive Downloader 2022.10.4")
 
 	if len(sys.argv) == 1:
 		print("Note that you can specify configuration file in parameters like AD C:\Path\To\MyConfig.txt")
@@ -297,6 +299,8 @@ if __name__ == "__main__":
 
 		if not os.path.isdir(directory):
 			os.makedirs(directory)
+		if 'title' in metadata:
+			print("Current book title: "+ titlecase(metadata['title']))                
 
 		images = download(session, n_threads, directory, links, scale, book_id)
 
@@ -304,10 +308,8 @@ if __name__ == "__main__":
 			import img2pdf
 
 			# prepare PDF metadata
-                        # Use  string.capwords() on title and more
                         # keywords are in 'subject'  
-                        # ISBN can be got from 'scribe3_search_catalog': 'isbn', 'scribe3_search_id': '9780981803982', 
-                        # or isbn': ['9780981803982', '0981803989']
+                        # ISBN can be got from isbn': ['9780981803982', '0981803989']
                         # 'creator': 'Kingsley, Eve', 'date': '2008'
 			# sometimes archive metadata is missing
 			pdfmeta = { }
@@ -322,7 +324,7 @@ if __name__ == "__main__":
 						raise Exception("unsupported metadata type")
 			# title
 			if 'title' in metadata:
-				pdfmeta['title'] = string.capwords(metadata['title'])
+				pdfmeta['title'] = titlecase(metadata['title'])
 
 			# author, we have issue here as we need sometimes to modify names from Rayan, Jack to Jack Rayan
 

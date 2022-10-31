@@ -2,3 +2,4 @@ requests
 tqdm
 img2pdf
 pywin32
+titlecase
