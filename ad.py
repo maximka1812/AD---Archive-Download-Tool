@@ -8,6 +8,7 @@ import argparse
 import os
 import sys
 import shutil
+import pyperclip
 
 def display_error(response, message):
 	print(message)
@@ -246,6 +247,15 @@ if __name__ == "__main__":
 		print(f"Output directory does not exist!")
 		exit()
 
+	clipboard_cont = pyperclip.paste()
+	pyperclip.copy('')  # such way we won't reuse old clipboard contents next time          
+
+	clipboard_list = clipboard_cont.splitlines()
+
+	for clip_url in clipboard_list:
+		if clip_url.startswith("https://archive.org/details/"):
+			urls.append(clip_url)
+        
 	books = []
 
 	# Check the urls format
