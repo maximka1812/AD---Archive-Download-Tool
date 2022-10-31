@@ -8,7 +8,8 @@ import argparse
 import os
 import sys
 import shutil
-import pyperclip
+# import pyperclip   # you can uncomment this if you need MacOS and Linux clipboard support
+import win32clipboard
 
 def display_error(response, message):
 	print(message)
@@ -165,7 +166,7 @@ def make_pdf(pdf, title, directory):
 
 if __name__ == "__main__":
 
-	print("Archive Downloader 2022.10.2")
+	print("Archive Downloader 2022.10.3")
 
 	if len(sys.argv) == 1:
 		print("Note that you can specify configuration file in parameters like AD C:\Path\To\MyConfig.txt")
@@ -247,8 +248,19 @@ if __name__ == "__main__":
 		print(f"Output directory does not exist!")
 		exit()
 
-	clipboard_cont = pyperclip.paste()
-	pyperclip.copy('')  # such way we won't reuse old clipboard contents next time          
+	# Universal clipboard support, you can comment this if you need MacOS and Linux clipboard support
+
+	# clipboard_cont = pyperclip.paste() # you can uncomment this if you need MacOS and Linux clipboard support
+	# pyperclip.copy('')  # such way we won't reuse old clipboard contents next time, you can uncomment this if you need MacOS and Linux clipboard support
+
+	# Windows specific part, you can comment this if you need MacOS and Linux clipboard support
+
+	win32clipboard.OpenClipboard()
+	clipboard_cont = win32clipboard.GetClipboardData()
+	win32clipboard.EmptyClipboard()
+	win32clipboard.CloseClipboard()
+
+	# end of Windows specific part, you can comment this if you need MacOS and Linux clipboard support
 
 	clipboard_list = clipboard_cont.splitlines()
 

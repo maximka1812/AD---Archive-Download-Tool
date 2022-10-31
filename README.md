@@ -11,6 +11,8 @@ Allows you to download locally books from https://archive.org!
 
 It can download original JPG files to work on them further, join them into single PDF without quality loss, or made special PDF with cover and matadata.
 
+Tool also now has instant clipboard support, and will pick up individual book URL or list of them from clipboard.
+
 You must remember to create an account on https://archive.org/ for the tool to work.
 
 ## Getting Started
