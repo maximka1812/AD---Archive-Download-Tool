@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
 		images = download(session, n_threads, directory, links, scale, book_id)
 
-		if outtype in ("pdf","jpgpdf","jpgpdfmeta","jpgepub"): # any modes that require creation of PDF file
+		if outtype in ("pdf","jpgpdf","jpgpdfmeta","jpgepub"): # any modes that require creation of PDF or EPUB file
 			import img2pdf
 
 			# prepare PDF metadata
@@ -336,7 +336,7 @@ if __name__ == "__main__":
 			if 'date' in metadata:
 				try:
 					pdfmeta['creationdate'] = datetime.strptime("1 June " + metadata['date'], '%d %B %Y')
-					pdfmeta['moddate'] = datetime.strptime("1 June " + metadata['date'], '%d %B %Y')
+					pdfmeta['moddate'] = pdfmeta['creationdate']
 				except:
 					pass
 			# keywords
@@ -344,7 +344,10 @@ if __name__ == "__main__":
 			pdfmeta['keywords'] = [f"https://archive.org/details/{book_id}"]
 
 			if 'subject' in metadata:
-				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['subject']
+				if isinstance(metadata['subject'], list):
+					pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['subject']
+				else:
+					pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['subject']]
 
 			if 'isbn' in metadata:
 				if isinstance(metadata['isbn'], list):
@@ -353,8 +356,11 @@ if __name__ == "__main__":
 					pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['isbn']]
 				
 
-			if 'data' in metadata:
-				pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['data']
+			if 'date' in metadata:
+				if isinstance(metadata['date'], list):
+					pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['date']
+				else:
+					pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['date']]
 
 			# print(metadata['subject'])
 
