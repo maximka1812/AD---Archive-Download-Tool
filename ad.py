@@ -11,7 +11,6 @@ import shutil
 from titlecase import titlecase
 
 # import pyperclip   # you can uncomment this if you need MacOS and Linux clipboard support
-import win32clipboard
 
 def display_error(response, message):
 	print(message)
@@ -168,7 +167,7 @@ def make_pdf(pdf, title, directory):
 
 if __name__ == "__main__":
 
-	print("Archive Downloader 2022.10.4")
+	print("Archive Downloader 2022.11.1")
 
 	if len(sys.argv) == 1:
 		print("Note that you can specify configuration file in parameters like AD C:\Path\To\MyConfig.txt")
@@ -252,22 +251,28 @@ if __name__ == "__main__":
 
 	# Universal clipboard support, you can comment this if you need MacOS and Linux clipboard support
 
+	clipboard_cont = ""
+
 	# clipboard_cont = pyperclip.paste() # you can uncomment this if you need MacOS and Linux clipboard support
 	# pyperclip.copy('')  # such way we won't reuse old clipboard contents next time, you can uncomment this if you need MacOS and Linux clipboard support
 
 	# Windows specific part, you can comment this if you need MacOS and Linux clipboard support
-
-	win32clipboard.OpenClipboard()
-	clipboard_cont = win32clipboard.GetClipboardData()
-	win32clipboard.EmptyClipboard()
-	win32clipboard.CloseClipboard()
+	if sys.platform == "win32":
+		import win32clipboard
+		win32clipboard.OpenClipboard()
+		try:
+			if not win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_UNICODETEXT)==0:
+				clipboard_cont = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+			win32clipboard.EmptyClipboard()
+		finally:
+			win32clipboard.CloseClipboard()
 
 	# end of Windows specific part, you can comment this if you need MacOS and Linux clipboard support
 
 	clipboard_list = clipboard_cont.splitlines()
 
 	for clip_url in clipboard_list:
-		if clip_url.startswith("https://archive.org/details/"):
+		if clip_url.startswith("https://archive.org/details/") and not clip_url in urls:
 			urls.append(clip_url)
         
 	books = []
@@ -279,11 +284,14 @@ if __name__ == "__main__":
 			books.append((book_id, url))
 		elif len(url.split("/")) == 1:
 			books.append((url, "https://archive.org/details/" + url))
-		else:
-			print(f"{url} --> Invalid book. URL must start with \"https://archive.org/details/\", or be a book id without any \"/\"")
-			exit()
-		
-	print(f"{len(books)} Book(s) to download")
+	
+	if len(books)==0:
+		print("No correct books URLs to download, exiting!")
+		exit()
+	else:	
+		print(f"{len(books)} Book(s) will be downloaded") 
+
+	
 
 	session = login(email, password)
 
