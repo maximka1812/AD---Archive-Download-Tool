@@ -9,6 +9,8 @@ toolazy
 10
 # Type of output - jpg, pdf, jpgpdf, jpgpdfmeta [default - jpg]
 jpgpdfmeta
+# Preparation for editing
+none
 # Book URLs or only IDs
 https://archive.org/details/billgatesbiograp0000becr
 https://archive.org/details/billgates00woog
