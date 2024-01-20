@@ -21,7 +21,7 @@ def display_error(response, message):
 
 def get_book_infos(session, url):
 	r = session.get(url).text
-	infos_url = "https:" + r.split('bookManifestUrl="')[1].split('"\n')[0]
+	infos_url = "https:" + r.split('"url":"')[1].split('"')[0].replace("\\u0026", "&")
 	response = session.get(infos_url)
 	data = response.json()['data']
 	title = titlecase(data['brOptions']['bookTitle']) # titlecase is more advanced compared to capwords method, but only for english!
@@ -71,7 +71,7 @@ def loan(session, book_id, verbose=True):
 		"identifier": book_id
 	}
 	# 2022-07-03: This request is done by the website but we don't need to do it here.
-	response = session.post("https://archive.org/services/loans/loan/searchInside.php", data=data)
+	# response = session.post("https://archive.org/services/loans/loan/searchInside.php", data=data)
 	data['action'] = "browse_book"
 	response = session.post("https://archive.org/services/loans/loan/", data=data)
 
@@ -311,11 +311,11 @@ def make_pdf_metadata(metadata):
 
 	pdfmeta['keywords'] = [f"https://archive.org/details/{book_id}"]
 
-	if 'subject' in metadata:
-		if isinstance(metadata['subject'], list):
-			pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['subject']
-		else:
-			pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['subject']]
+	# if 'subject' in metadata:
+	# 	if isinstance(metadata['subject'], list):
+	# 		pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['subject']
+	# 	else:
+	# 		pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['subject']]
 
 	if 'isbn' in metadata:
 		if isinstance(metadata['isbn'], list):
@@ -324,11 +324,11 @@ def make_pdf_metadata(metadata):
 			pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['isbn']]
 		
 
-	if 'date' in metadata:
-		if isinstance(metadata['date'], list):
-			pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['date']
-		else:
-			pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['date']]
+	# if 'date' in metadata:
+	# 	if isinstance(metadata['date'], list):
+	# 		pdfmeta['keywords'] =  pdfmeta['keywords'] + metadata['date']
+	# 	else:
+	# 		pdfmeta['keywords'] =  pdfmeta['keywords'] + [metadata['date']]
 
 	return pdfmeta
 
