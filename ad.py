@@ -50,12 +50,9 @@ def format_data(content_type, fields):
 def login(email, password):
 	session = requests.Session()
 	session.get("https://archive.org/account/login")
-	content_type = "----WebKitFormBoundary"+"".join(random.sample(string.ascii_letters + string.digits, 16))
+	data = {"username":email, "password":password}
 
-	headers = {'Content-Type': 'multipart/form-data; boundary='+content_type}
-	data = format_data(content_type, {"username":email, "password":password, "submit_by_js":"true"})
-
-	response = session.post("https://archive.org/account/login", data=data, headers=headers)
+	response = session.post("https://archive.org/account/login", data=data)
 	if "bad_login" in response.text:
 		print("[-] Wrong email or password, please check!")
 		sys.exit()
@@ -360,7 +357,7 @@ def Patch_DPI(images):
 
 if __name__ == "__main__":
 
-	print("Archive Downloader 2022.11.3")
+	print("Archive Downloader 2024.11.3")
 
 	if len(sys.argv) == 1:
 		print("Note that you can specify configuration file in parameters like AD C:\Path\To\MyConfig.txt")	
